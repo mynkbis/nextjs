@@ -7,7 +7,6 @@ import { Navbar } from '../components/navbar/navbar';
 import { GraphQLClient, gql  } from 'graphql-request';
 import { Card, Container, Typography } from '@material-ui/core';
 import { color, lineHeight } from '@mui/system';
-import { Admin } from './admin/admin';
 import { DrawerComponent } from '../components/navbar/drawer';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -17,14 +16,16 @@ import { useState } from 'react';
 export const getStaticProps = async () => {
   const endpoint = process.env.PREVIEW_CH_ENDPOINT;
   const graphQLClient = new GraphQLClient(endpoint);
-  graphQLClient.setHeader("Authorization", "Apikey 8626cf56-e364-4fd1-4fe0-311e23ac6355")
+   graphQLClient.setHeader("Authorization", "Apikey 8626cf56-e364-4fd1-4fe0-311e23ac6355")
+  //graphQLClient.setHeader("Authorization","Apikey q8ggxpoVDW76Kw918hwnnRvxlZmAP2QZ")
   
+
   const query = gql`{
   hotelX {
     search(
       criteria: { 
-        checkIn: "2022-10-28",
-        checkOut: "2022-10-29",
+        checkIn: "2022-11-01",
+        checkOut: "2022-11-15",
         occupancies: [{ paxes: [{age: 28}, {age: 30}] }],
         hotels: ["1"],
         currency: "EUR",
@@ -46,7 +47,7 @@ export const getStaticProps = async () => {
       }) {
            context
       errors{
-        code
+        code{
         type
         description
       }
@@ -228,6 +229,7 @@ export const getStaticProps = async () => {
     }
   }
 } `
+  
   const data =await graphQLClient.request(query)
   return {
     props: {   
@@ -242,6 +244,7 @@ export default function Home({data}) {
   const handleclick = () => {
     SetHotel(true);
     
+    
   }
   const handleclose= () => {
     SetHotel(true);
@@ -253,15 +256,14 @@ return (
        {/* <div style={{background: "#722222"}}>
         <Typography variant='h2' style={{ color: "#FFFFFF" }}>TravelX</Typography>
       </div>  */}
-      <Admin />
-      <Container >
+         <Container >
       <div style={{display:"flex", "flex-wrap": "wrap", "justifyContent":"space-evenly", background:"",}}>
         {data && data.hotelX.search && data.hotelX.search.options.map((otel) => {
         return (
           <>
         
-              <Card key={otel.id} style={{background:"#94B8B8", width: "350px", margin: "10px", padding: "10px", color: "#5E2121" }}> 
-              <img width="330px" height="250px"
+              <Card key={otel.id} style={{background:"#94B8B8", width: "250px", margin: "10px", padding: "10px", color: "#5E2121" }}> 
+              <img width="230px" height="150px"
                 style={{
                   "border-radius": "12px",
                   border: "1px solid #ffff",
@@ -273,7 +275,7 @@ return (
                 <Typography variant='h6'
                 style={{
                 color: "#5E2121",
-                lineHeight: "2",
+                lineHeight: "1.5",
                 marginLeft: "10px"
                 }} >
                 {otel.hotelName}
@@ -282,7 +284,7 @@ return (
                 style={{
                   background: "#94B8B8",
                   padding: "10px",
-                  lineHeight: "1.5",
+                  lineHeight: "1.2",
                   border: ".9px dotted #ffff"
                 }} onClick={(e) => {handleclick(e) }} >
                 <span>Payment Type: {otel.paymentType}</span>
