@@ -51,7 +51,7 @@ export const getStaticProps = async () => {
 }
 
 const filterData = "";
-const filter = "";
+const filter ={};
 
 const Admin = ({ data }) => {
   console.log("from admin", data)
@@ -84,7 +84,12 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
 }
+  
+  
+  const handleClick = () => {
+    filter = input
 
+  }
    return (
      <>
         <p>Admin List of Access</p>
@@ -97,7 +102,7 @@ function createData(name, calories, fat, carbs, protein) {
               handleChange(e)
             }}
            name="Input" />
-         <Button>Submit</Button>
+         <Button onClick={()=>{handleClick()}}>Submit</Button>
        </div>
         <hr />
         <TableContainer component={Paper}>

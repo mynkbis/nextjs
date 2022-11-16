@@ -10,6 +10,7 @@ import { color, lineHeight } from '@mui/system';
 import { DrawerComponent } from '../components/navbar/drawer';
 import Image from 'next/image';
 import { useState } from 'react';
+import CardHotel from './card';
 
 
 
@@ -21,12 +22,12 @@ export const getStaticProps = async () => {
   
 
   const query = gql`{
-  hotelX {
+     hotelX {
     search(
-      criteria: { 
-        checkIn: "2022-11-01",
-        checkOut: "2022-11-15",
-        occupancies: [{ paxes: [{age: 28}, {age: 30}] }],
+      criteria: {
+        checkIn: "2022-11-18",
+        checkOut: "2022-11-30",
+        occupancies: [{ paxes: [{age: 18}, {age: 30}] }],
         hotels: ["1"],
         currency: "EUR",
         market: "ES",
@@ -47,7 +48,7 @@ export const getStaticProps = async () => {
       }) {
            context
       errors{
-        code{
+        code
         type
         description
       }
@@ -228,77 +229,45 @@ export const getStaticProps = async () => {
       }
     }
   }
-} `
+   } `
+  
   
   const data =await graphQLClient.request(query)
   return {
     props: {   
       data
     }
+  
   }
 }
 
 export default function Home({data}) {
   console.log("data", data.hotelX.search)
-  const [hotel, SetHotel] = useState(false);
-  const handleclick = () => {
-    SetHotel(true);
-    
-    
-  }
-  const handleclose= () => {
-    SetHotel(true);
-          }
+   const [hotel, SetHotel] = useState(false);
+  
+  const image = "https://tourismteacher.com/wp-content/uploads/2020/09/pexels-photo-753626.jpeg?ezimgfmt=ngcb4/notWebP";
 return (
-    <> 
+  <>
+     
       <Navbar/>
+    <div style={{ backgroundImage: `url(${image})`, }}>
+   
       {/* <DrawerComponent/> */}
        {/* <div style={{background: "#722222"}}>
         <Typography variant='h2' style={{ color: "#FFFFFF" }}>TravelX</Typography>
-      </div>  */}
-         <Container >
-      <div style={{display:"flex", "flex-wrap": "wrap", "justifyContent":"space-evenly", background:"",}}>
+      </div>   */}
+    <Container style={{}} >
+        <div style={{display:"flex", "flexWrap": "wrap", justifyContent:"space-between",} }>
         {data && data.hotelX.search && data.hotelX.search.options.map((otel) => {
         return (
           <>
-        
-              <Card key={otel.id} style={{background:"#94B8B8", width: "250px", margin: "10px", padding: "10px", color: "#5E2121" }}> 
-              <img width="230px" height="150px"
-                style={{
-                  "border-radius": "12px",
-                  border: "1px solid #ffff",
-                  cursor: "pointer",
-                  }}
-                src='https://m.timbu.com/img/h1411143/400/280/b1/jores-hotel-sanje-1411143-1.jpg'
-                alt="hotel" />
-            
-                <Typography variant='h6'
-                style={{
-                color: "#5E2121",
-                lineHeight: "1.5",
-                marginLeft: "10px"
-                }} >
-                {otel.hotelName}
-              </Typography>
-               <Card
-                style={{
-                  background: "#94B8B8",
-                  padding: "10px",
-                  lineHeight: "1.2",
-                  border: ".9px dotted #ffff"
-                }} onClick={(e) => {handleclick(e) }} >
-                <span>Payment Type: {otel.paymentType}</span>
-                <div>RateRules: {otel.rateRules ? otel.rateRules : "NA"}</div>
-                <div style={{ color: "#5E2121" }}>Currency: {otel.price.currency}</div>
-                </Card> 
-              <div style={{margin:"10px"}}>
-                <Link href="/detailPage"><a>More Details...</a></Link></div>  
-            </Card>
-            {/* {hotel ? <DetailPage otel={otel}  /> : ""} */}
-            </>
+           <CardHotel otel={otel} />  
+            {/* hotel card for listing*/}
+          </>
           )
         })}
         </div>
-      </Container>
+    </Container>
+    </div>
     </>)  
 }
